@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Product {
-    private String id;
+    private Long id;
     private String name;
     private Integer stock;
+    private Long branchId;
 } 
