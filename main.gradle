@@ -27,7 +27,7 @@ subprojects {
         useJUnitPlatform()
     }
 
-    dependencies {
+    dependencies {		
         implementation 'io.projectreactor:reactor-core'
         implementation 'io.projectreactor.addons:reactor-extra'
 
