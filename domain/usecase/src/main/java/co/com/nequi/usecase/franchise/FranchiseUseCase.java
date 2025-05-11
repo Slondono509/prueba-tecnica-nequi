@@ -16,6 +16,22 @@ public class FranchiseUseCase {
         return franchiseRepository.save(franchise);
     }
 
+    public Mono<Franchise> getFranchiseById(Long id) {
+        return franchiseRepository.findById(id);
+    }
+
+    public Flux<Franchise> getAllFranchises() {
+        return franchiseRepository.findAll();
+    }
+
+    public Mono<Franchise> updateFranchise(Franchise franchise) {
+        return franchiseRepository.update(franchise);
+    }
+
+    public Mono<Void> deleteFranchise(Long id) {
+        return franchiseRepository.deleteById(id);
+    }
+
     public Mono<Franchise> addBranchToFranchise(String franchiseId, Branch branch) {
         return franchiseRepository.findById(franchiseId)
                 .map(franchise -> {
