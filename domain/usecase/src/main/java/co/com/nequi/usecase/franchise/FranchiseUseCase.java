@@ -1,7 +1,7 @@
 package co.com.nequi.usecase.franchise;
 
 import co.com.nequi.model.franchise.Franchise;
-import co.com.nequi.model.franchise.gateways.FranchiseRepository;
+import co.com.nequi.model.franchise.gateways.FranchiseGateway;
 import co.com.nequi.model.branch.Branch;
 import co.com.nequi.model.product.Product;
 import lombok.RequiredArgsConstructor;
@@ -10,39 +10,39 @@ import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 public class FranchiseUseCase {
-    private final FranchiseRepository franchiseRepository;
+    private final FranchiseGateway franchiseGateway;
 
     public Mono<Franchise> createFranchise(Franchise franchise) {
-        return franchiseRepository.save(franchise);
+        return franchiseGateway.save(franchise);
     }
 
     public Mono<Franchise> getFranchiseById(Long id) {
-        return franchiseRepository.findById(id);
+        return franchiseGateway.findById(id);
     }
 
     public Flux<Franchise> getAllFranchises() {
-        return franchiseRepository.findAll();
+        return franchiseGateway.findAll();
     }
 
     public Mono<Franchise> updateFranchise(Franchise franchise) {
-        return franchiseRepository.update(franchise);
+        return franchiseGateway.update(franchise);
     }
 
     public Mono<Void> deleteFranchise(Long id) {
-        return franchiseRepository.deleteById(id);
+        return franchiseGateway.deleteById(id);
     }
 
-    public Mono<Franchise> addBranchToFranchise(String franchiseId, Branch branch) {
-        return franchiseRepository.findById(franchiseId)
+    public Mono<Franchise> addBranchToFranchise(Long franchiseId, Branch branch) {
+        return franchiseGateway.findById(franchiseId)
                 .map(franchise -> {
                     franchise.getBranches().add(branch);
                     return franchise;
                 })
-                .flatMap(franchiseRepository::update);
+                .flatMap(franchiseGateway::update);
     }
 
-    public Mono<Franchise> addProductToBranch(String franchiseId, String branchId, Product product) {
-        return franchiseRepository.findById(franchiseId)
+    public Mono<Franchise> addProductToBranch(Long franchiseId, String branchId, Product product) {
+        return franchiseGateway.findById(franchiseId)
                 .map(franchise -> {
                     franchise.getBranches().stream()
                             .filter(branch -> branch.getId().equals(branchId))
@@ -50,11 +50,11 @@ public class FranchiseUseCase {
                             .ifPresent(branch -> branch.getProducts().add(product));
                     return franchise;
                 })
-                .flatMap(franchiseRepository::update);
+                .flatMap(franchiseGateway::update);
     }
 
-    public Mono<Franchise> removeProductFromBranch(String franchiseId, String branchId, String productId) {
-        return franchiseRepository.findById(franchiseId)
+    public Mono<Franchise> removeProductFromBranch(Long franchiseId, String branchId, String productId) {
+        return franchiseGateway.findById(franchiseId)
                 .map(franchise -> {
                     franchise.getBranches().stream()
                             .filter(branch -> branch.getId().equals(branchId))
@@ -68,11 +68,11 @@ public class FranchiseUseCase {
                             );
                     return franchise;
                 })
-                .flatMap(franchiseRepository::update);
+                .flatMap(franchiseGateway::update);
     }
 
-    public Mono<Franchise> updateProductStock(String franchiseId, String branchId, String productId, Integer newStock) {
-        return franchiseRepository.findById(franchiseId)
+    public Mono<Franchise> updateProductStock(Long franchiseId, String branchId, String productId, Integer newStock) {
+        return franchiseGateway.findById(franchiseId)
                 .map(franchise -> {
                     franchise.getBranches().stream()
                             .filter(branch -> branch.getId().equals(branchId))
@@ -85,11 +85,11 @@ public class FranchiseUseCase {
                             );
                     return franchise;
                 })
-                .flatMap(franchiseRepository::update);
+                .flatMap(franchiseGateway::update);
     }
 
-    public Flux<Product> getProductsWithHighestStockByBranch(String franchiseId) {
-        return franchiseRepository.findById(franchiseId)
+    public Flux<Product> getProductsWithHighestStockByBranch(Long franchiseId) {
+        return franchiseGateway.findById(franchiseId)
                 .flatMapMany(franchise -> 
                     Flux.fromIterable(franchise.getBranches())
                         .map(branch -> 

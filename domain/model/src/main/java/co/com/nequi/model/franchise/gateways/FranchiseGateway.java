@@ -4,7 +4,7 @@ import co.com.nequi.model.franchise.Franchise;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface FranchiseRepository {
+public interface FranchiseGateway {
     Mono<Franchise> save(Franchise franchise);
     Mono<Franchise> findById(Long id);
     Flux<Franchise> findAll();
