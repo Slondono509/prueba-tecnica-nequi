@@ -11,7 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @AllArgsConstructor
 @Builder
 @ToString
-@Table(schema = "franchise", value = "franchise")
+@Table(schema = "public", value = "franchises")
 public class FranchiseEntity {
 
     @Id
