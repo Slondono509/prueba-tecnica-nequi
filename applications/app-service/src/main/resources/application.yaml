@@ -20,6 +20,7 @@ management:
     health:
       probes:
         enabled: true
+adapters:
   r2dbc:
     initialization-mode: always
     schema: classpath:schema.sql
@@ -31,6 +32,21 @@ management:
       max-idle-time: 30m
       validation-query: SELECT 1
     properties:
-      schema: nequi_prueba_dev        
+      schema: public
+      database: nequi_prueba_dev
+      host: "${SPRING_R2DBC_URL:us-east-1.rds.amazonaws.com}"
+      username: "${SPRING_R2DBC_USERNAME:dbadmin}" 
+      password: "${SPRING_R2DBC_PASSWORD:123456"
+      port: 5432          
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+aws:
+  region: 
+  secretName: "${SPRING_R2DBC_URL}"
+  secretNameDB: "${SPRING_R2DBC_USERNAME}"
+  secretKeyToken: "${SPRING_R2DBC_PASSWORD}"
+
+
+
+
+
