@@ -2,9 +2,36 @@
 FROM eclipse-temurin:17-jdk-focal AS build
 WORKDIR /workspace/app
 
-# Copiar el código fuente y construir
+# Configurar variables de entorno para Gradle
+ENV GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
+ENV JAVA_HOME=/opt/java/openjdk
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+# Copiar archivos de gradle primero para aprovechar la caché de capas
+COPY gradlew .
+COPY gradle gradle
+COPY settings.gradle .
+COPY build.gradle .
+COPY gradle.properties .
+COPY main.gradle .
+
+# Dar permisos de ejecución al gradlew
+RUN chmod +x gradlew
+
+# Verificar la estructura del proyecto
+RUN ./gradlew projects --no-daemon
+
+# Descargar dependencias
+RUN ./gradlew --no-daemon dependencies
+
+# Copiar el código fuente
 COPY . .
-RUN ./gradlew clean :applications:app-service:build -x test
+
+# Listar contenido para debug
+RUN ls -la && ls -la applications/
+
+# Construir el proyecto
+RUN ./gradlew clean build -x test --no-daemon
 
 # Runtime stage
 FROM eclipse-temurin:17-jre-focal
@@ -25,7 +52,7 @@ ENV TZ=America/Bogota
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Copiar el JAR desde el stage de build
-COPY --from=build /workspace/app/applications/app-service/build/libs/pruebaTecnica.jar app.jar
+COPY --from=build /workspace/app/applications/app-service/build/libs/*.jar app.jar
 RUN chown appuser:appgroup /app/app.jar
 
 # Configurar variables de entorno y usuario

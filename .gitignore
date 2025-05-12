@@ -339,3 +339,5 @@ gradle-app.setting
 
 # Cursor settings
 .cursorsettings
+
+aws/
