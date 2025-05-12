@@ -20,5 +20,17 @@ management:
     health:
       probes:
         enabled: true
+  r2dbc:
+    initialization-mode: always
+    schema: classpath:schema.sql
+    pool:
+      enabled: false
+      name: api-postgres-connection-pool
+      initial-size: 5
+      max-size: 500
+      max-idle-time: 30m
+      validation-query: SELECT 1
+    properties:
+      schema: nequi_prueba_dev        
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
