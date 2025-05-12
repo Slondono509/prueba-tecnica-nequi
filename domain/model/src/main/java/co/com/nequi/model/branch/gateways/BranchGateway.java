@@ -4,7 +4,7 @@ import co.com.nequi.model.branch.Branch;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface BranchRepository {
+public interface BranchGateway {
     Mono<Branch> save(Branch branch);
     Mono<Branch> findById(Long id);
     Flux<Branch> findAll();

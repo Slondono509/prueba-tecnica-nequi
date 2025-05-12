@@ -1,36 +1,36 @@
 package co.com.nequi.usecase.branch;
 
 import co.com.nequi.model.branch.Branch;
-import co.com.nequi.model.branch.gateways.BranchRepository;
+import co.com.nequi.model.branch.gateways.BranchGateway;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 public class BranchUseCase {
-    private final BranchRepository branchRepository;
+    private final BranchGateway branchGateway;
 
     public Mono<Branch> createBranch(Branch branch) {
-        return branchRepository.save(branch);
+        return branchGateway.save(branch);
     }
 
     public Mono<Branch> getBranchById(Long id) {
-        return branchRepository.findById(id);
+        return branchGateway.findById(id);
     }
 
     public Flux<Branch> getAllBranches() {
-        return branchRepository.findAll();
+        return branchGateway.findAll();
     }
 
     public Flux<Branch> getBranchesByFranchiseId(Long franchiseId) {
-        return branchRepository.findByFranchiseId(franchiseId);
+        return branchGateway.findByFranchiseId(franchiseId);
     }
 
     public Mono<Branch> updateBranch(Branch branch) {
-        return branchRepository.update(branch);
+        return branchGateway.update(branch);
     }
 
     public Mono<Void> deleteBranch(Long id) {
-        return branchRepository.deleteById(id);
+        return branchGateway.deleteById(id);
     }
 } 
