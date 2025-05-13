@@ -1,47 +1,169 @@
-# Proyecto Base Implementando Clean Architecture
+# Microservicio de Gestión de Franquicias, Sucursales y Productos
 
-## Antes de Iniciar
+## Descripción
+Este microservicio implementa una arquitectura limpia (Clean Architecture) para gestionar franquicias, sus sucursales y productos asociados. Utiliza Spring Boot con programación reactiva y R2DBC para la persistencia de datos.
 
-Empezaremos por explicar los diferentes componentes del proyectos y partiremos de los componentes externos, continuando con los componentes core de negocio (dominio) y por último el inicio y configuración de la aplicación.
+## Estructura del Proyecto
+El proyecto sigue los principios de Clean Architecture con la siguiente estructura:
 
-Lee el artículo [Clean Architecture — Aislando los detalles](https://medium.com/bancolombia-tech/clean-architecture-aislando-los-detalles-4f9530f35d7a)
+```
+├── applications/          # Configuración de la aplicación
+├── domain/               # Capa de dominio
+│   ├── model/           # Modelos de dominio
+│   └── usecase/         # Casos de uso
+├── infrastructure/       # Capa de infraestructura
+│   ├── driven-adapters/ # Adaptadores dirigidos
+│   │   └── r2dbc-postgresql/
+│   │       ├── src/
+│   │       │   ├── main/
+│   │       │   │   ├── java/co/com/nequi/r2dbc/
+│   │       │   │   │   ├── branch/      # Adaptadores para sucursales
+│   │       │   │   │   ├── franchise/   # Adaptadores para franquicias
+│   │       │   │   │   ├── product/     # Adaptadores para productos
+│   │       │   │   │   └── entity/      # Entidades de base de datos
+│   │       │   └── test/                # Pruebas unitarias
+│   ├── entry-points/    # Puntos de entrada
+│   │   └── reactive-web/# API REST reactiva
+│   └── helpers/         # Utilidades y helpers
+```
 
-# Arquitectura
+## Tecnologías Principales
+- Java 17
+- Spring Boot 3.x
+- Spring WebFlux
+- R2DBC (PostgreSQL)
+- Project Reactor
+- Gradle
+- JUnit 5
+- Mockito
+- Lombok
 
-![Clean Architecture](https://miro.medium.com/max/1400/1*ZdlHz8B0-qu9Y-QO3AXR_w.png)
+## API REST
 
-## Domain
+### Franquicias (Franchises)
+Base URL: `/api/franchises`
 
-Es el módulo más interno de la arquitectura, pertenece a la capa del dominio y encapsula la lógica y reglas del negocio mediante modelos y entidades del dominio.
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| POST | `/` | Crear una nueva franquicia |
+| GET | `/` | Obtener todas las franquicias |
+| GET | `/{id}` | Obtener una franquicia por ID |
+| PUT | `/{id}` | Actualizar una franquicia |
+| DELETE | `/{id}` | Eliminar una franquicia |
+| GET | `/{franchiseId}/branches` | Obtener sucursales de una franquicia |
+| GET | `/{franchiseId}/highest-stock-products` | Obtener productos con mayor stock por franquicia |
 
-## Usecases
+### Sucursales (Branches)
+Base URL: `/api/branches`
 
-Este módulo gradle perteneciente a la capa del dominio, implementa los casos de uso del sistema, define lógica de aplicación y reacciona a las invocaciones desde el módulo de entry points, orquestando los flujos hacia el módulo de entities.
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| POST | `/` | Crear una nueva sucursal |
+| GET | `/` | Obtener todas las sucursales |
+| GET | `/{id}` | Obtener una sucursal por ID |
+| PUT | `/{id}` | Actualizar una sucursal |
+| DELETE | `/{id}` | Eliminar una sucursal |
+| GET | `/{branchId}/products` | Obtener productos de una sucursal |
 
-## Infrastructure
+### Productos (Products)
+Base URL: `/api/products`
 
-### Helpers
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| POST | `/` | Crear un nuevo producto |
+| GET | `/` | Obtener todos los productos |
+| GET | `/{id}` | Obtener un producto por ID |
+| PUT | `/{id}` | Actualizar un producto |
+| DELETE | `/{id}` | Eliminar un producto |
+| PATCH | `/{id}/stock` | Actualizar el stock de un producto |
 
-En el apartado de helpers tendremos utilidades generales para los Driven Adapters y Entry Points.
+### Formatos de Respuesta
+Todas las respuestas son en formato JSON y siguen la siguiente estructura:
 
-Estas utilidades no están arraigadas a objetos concretos, se realiza el uso de generics para modelar comportamientos
-genéricos de los diferentes objetos de persistencia que puedan existir, este tipo de implementaciones se realizan
-basadas en el patrón de diseño [Unit of Work y Repository](https://medium.com/@krzychukosobudzki/repository-design-pattern-bc490b256006)
+- Respuesta exitosa:
+  ```json
+  {
+    "id": 1,
+    "name": "Ejemplo",
+    ...
+  }
+  ```
 
-Estas clases no puede existir solas y debe heredarse su compartimiento en los **Driven Adapters**
+- Respuesta de error:
+  ```json
+  {
+    "error": "Descripción del error",
+    "status": 400,
+    "timestamp": "2024-03-14T12:00:00Z"
+  }
+  ```
 
-### Driven Adapters
+### Códigos de Estado HTTP
+- 200 OK: Petición exitosa
+- 201 Created: Recurso creado exitosamente
+- 204 No Content: Eliminación exitosa
+- 400 Bad Request: Error en la petición
+- 404 Not Found: Recurso no encontrado
+- 500 Internal Server Error: Error del servidor
 
-Los driven adapter representan implementaciones externas a nuestro sistema, como lo son conexiones a servicios rest,
-soap, bases de datos, lectura de archivos planos, y en concreto cualquier origen y fuente de datos con la que debamos
-interactuar.
+## Capas de la Aplicación
 
-### Entry Points
+### Domain
+- **Model**: Define las entidades core del negocio y sus reglas
+- **Usecase**: Implementa la lógica de negocio y casos de uso
 
-Los entry points representan los puntos de entrada de la aplicación o el inicio de los flujos de negocio.
+### Infrastructure
+- **Driven Adapters**: 
+  - Implementación de repositorios con R2DBC
+  - Adaptadores para persistencia de datos
+  - Transformación entre entidades y modelos de dominio
+- **Entry Points**: 
+  - API REST reactiva
+  - Controladores para gestión de recursos
+  - Manejo de peticiones y respuestas
 
-## Application
+## Patrones Implementados
+- Clean Architecture
+- Dependency Injection
+- Repository Pattern
+- Adapter Pattern
+- Gateway Pattern
+- Builder Pattern
 
-Este módulo es el más externo de la arquitectura, es el encargado de ensamblar los distintos módulos, resolver las dependencias y crear los beans de los casos de use (UseCases) de forma automática, inyectando en éstos instancias concretas de las dependencias declaradas. Además inicia la aplicación (es el único módulo del proyecto donde encontraremos la función “public static void main(String[] args)”.
+## Testing
+El proyecto incluye pruebas unitarias exhaustivas para cada capa:
 
-**Los beans de los casos de uso se disponibilizan automaticamente gracias a un '@ComponentScan' ubicado en esta capa.**
+- **Adaptadores**: 
+  - Pruebas para transformación de datos
+  - Verificación de operaciones CRUD
+  - Manejo de errores
+  - Pruebas de integración con R2DBC
+
+### Ejecutar Pruebas
+```bash
+./gradlew :infrastructure:driven-adapters:r2dbc-postgresql:test
+```
+
+## Configuración y Despliegue
+
+### Requisitos Previos
+- Java 17 o superior
+- PostgreSQL 12 o superior
+- Gradle 7.x
+
+### Variables de Entorno
+```properties
+spring.r2dbc.url=r2dbc:postgresql://localhost:5432/db_name
+spring.r2dbc.username=username
+spring.r2dbc.password=password
+```
+
+### Construcción
+```bash
+./gradlew clean build
+```
+
+
+
+
+
