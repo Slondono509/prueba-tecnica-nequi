@@ -193,16 +193,6 @@ Todas las respuestas son en formato JSON y siguen la siguiente estructura:
 ## Testing
 El proyecto incluye pruebas unitarias exhaustivas para cada capa:
 
-- **Adaptadores**: 
-  - Pruebas para transformación de datos
-  - Verificación de operaciones CRUD
-  - Manejo de errores
-  - Pruebas de integración con R2DBC
-
-### Ejecutar Pruebas
-```bash
-./gradlew :infrastructure:driven-adapters:r2dbc-postgresql:test
-```
 
 ## Configuración y Despliegue
 
@@ -212,10 +202,17 @@ El proyecto incluye pruebas unitarias exhaustivas para cada capa:
 - Gradle 7.x
 
 ### Variables de Entorno
+
+en el archivo 
+
+Ruta: applications/app-service/src/main/resources/application.yaml
+
+Configurar el valor para las variables
+
 ```properties
-spring.r2dbc.url=r2dbc:postgresql://localhost:5432/db_name
-spring.r2dbc.username=username
-spring.r2dbc.password=password
+SPRING_R2DBC_URL=r2dbc:postgresql://localhost:5432/db_name
+SPRING_R2DBC_USERNAME=username
+SPRING_R2DBC_PASSWORD=password
 ```
 
 ### Construcción
