@@ -203,9 +203,7 @@ El proyecto incluye pruebas unitarias exhaustivas para cada capa:
 
 ### Variables de Entorno
 
-en el archivo 
-
-Ruta: applications/app-service/src/main/resources/application.yaml
+en el archivo Ruta: applications/app-service/src/main/resources/application.yaml
 
 Configurar el valor para las variables
 
@@ -213,6 +211,14 @@ Configurar el valor para las variables
 SPRING_R2DBC_URL=r2dbc:postgresql://localhost:5432/db_name
 SPRING_R2DBC_USERNAME=username
 SPRING_R2DBC_PASSWORD=password
+```
+
+### Subir imagen a AWS
+
+Configurar las credenciales de AWS en la consola y ejecutar el siguiente comando
+
+```bash
+bash deployment/build-and-push.sh
 ```
 
 ### Construcción
