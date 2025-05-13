@@ -1,3 +1,23 @@
 dependencies {
     implementation project(':model')
+    
+    // JUnit Platform
+    testImplementation platform('org.junit:junit-bom:5.9.2')
+    
+    // JUnit Jupiter API and Engine
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    
+    // Mockito
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.8.1'
+    testImplementation 'org.mockito:mockito-core:4.8.1'
+    
+    // Reactor Test
+    testImplementation 'io.projectreactor:reactor-test:3.5.4'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
