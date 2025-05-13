@@ -7,5 +7,16 @@ dependencies {
     implementation 'org.reactivecommons.utils:object-mapper-api:0.1.0'
 
     testImplementation 'org.reactivecommons.utils:object-mapper:0.1.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.8.1'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test:3.5.4'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
