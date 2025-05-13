@@ -53,6 +53,22 @@ Base URL: `/api/franchises`
 | GET | `/{franchiseId}/branches` | Obtener sucursales de una franquicia |
 | GET | `/{franchiseId}/highest-stock-products` | Obtener productos con mayor stock por franquicia |
 
+#### Ejemplos de Peticiones
+
+##### Crear Franquicia (POST /)
+```json
+{
+  "name": "Mi Franquicia"
+}
+```
+
+##### Actualizar Franquicia (PUT /{id})
+```json
+{  
+  "name": "Mi Franquicia Actualizada"
+}
+```
+
 ### Sucursales (Branches)
 Base URL: `/api/branches`
 
@@ -64,6 +80,24 @@ Base URL: `/api/branches`
 | PUT | `/{id}` | Actualizar una sucursal |
 | DELETE | `/{id}` | Eliminar una sucursal |
 | GET | `/{branchId}/products` | Obtener productos de una sucursal |
+
+#### Ejemplos de Peticiones
+
+##### Crear Sucursal (POST /)
+```json
+{
+  "name": "Sucursal Centro",
+  "franchiseId": 1
+}
+```
+
+##### Actualizar Sucursal (PUT /{id})
+```json
+{  
+  "name": "Sucursal Centro Actualizada",
+  "franchiseId": 1
+}
+```
 
 ### Productos (Products)
 Base URL: `/api/products`
@@ -77,26 +111,52 @@ Base URL: `/api/products`
 | DELETE | `/{id}` | Eliminar un producto |
 | PATCH | `/{id}/stock` | Actualizar el stock de un producto |
 
+#### Ejemplos de Peticiones
+
+##### Crear Producto (POST /)
+```json
+{
+  "name": "Producto Nuevo",
+  "stock": 100,
+  "branchId": 1
+}
+```
+
+##### Actualizar Producto (PUT /{id})
+```json
+{  
+  "name": "Producto Actualizado",
+  "stock": 150,
+  "branchId": 1
+}
+```
+
+##### Actualizar Stock de Producto (PATCH /{id}/stock)
+```json
+50
+```
+
 ### Formatos de Respuesta
 Todas las respuestas son en formato JSON y siguen la siguiente estructura:
 
-- Respuesta exitosa:
-  ```json
-  {
-    "id": 1,
-    "name": "Ejemplo",
-    ...
-  }
-  ```
+#### Respuesta Exitosa
+```json
+{
+  "id": 1,
+  "name": "Ejemplo",
+  "createdAt": "2024-03-14T12:00:00Z",
+  "updatedAt": "2024-03-14T12:00:00Z"
+}
+```
 
-- Respuesta de error:
-  ```json
-  {
-    "error": "Descripción del error",
-    "status": 400,
-    "timestamp": "2024-03-14T12:00:00Z"
-  }
-  ```
+#### Respuesta de Error
+```json
+{
+  "error": "Descripción del error",
+  "status": 400,
+  "timestamp": "2024-03-14T12:00:00Z"
+}
+```
 
 ### Códigos de Estado HTTP
 - 200 OK: Petición exitosa
